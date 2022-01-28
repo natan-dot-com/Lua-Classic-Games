@@ -26,7 +26,7 @@ function love.load()
     -- Set virtual window interface
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
-        resizable = false,
+        resizable = true,
         vsync = true
     })
 
@@ -48,11 +48,15 @@ function love.load()
     gameStateRunning = false
 end
 
+function love.resize(width, height)
+    push:resize(width, height)
+end
+
 function love.update(dt)
     if gameStateRunning then
         -- Paddle-ball collision proccessing
         if BallInstance:collides(P1) then
-            BallInstance.dx = -BallInstance.dx * 1.05
+            BallInstance.dx = -BallInstance.dx * 1.1
             BallInstance.x = P1.x + 5
 
             if BallInstance.dy < 0 then
@@ -64,7 +68,7 @@ function love.update(dt)
             SFX['hit']:play()
         end
         if BallInstance:collides(P2) then
-            BallInstance.dx = -BallInstance.dx * 1.05
+            BallInstance.dx = -BallInstance.dx * 1.1
             BallInstance.x = P2.x - 4
 
             if BallInstance.dy < 0 then
@@ -135,6 +139,7 @@ function love.draw()
     -- Define background color (RGB = [40, 45, 52])
     love.graphics.setBackgroundColor(40/255, 45/255, 52/255, 1)
     love.graphics.clear(love.graphics.getBackgroundColor())
+
     love.graphics.setFont(mainFont)
     love.graphics.printf('Pong Remake (w/ Lua)', -20, 10, VIRTUAL_WIDTH, 'right')
 

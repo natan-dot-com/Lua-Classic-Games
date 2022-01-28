@@ -9,6 +9,7 @@ Paddle = class {
         self.dy = 0
     end,
 
+    -- Update paddle's current position
     update = function(self, dt)
         if self.dy < 0 then
             self.y = math.max(0, self.y + self.dy * dt)
@@ -17,6 +18,7 @@ Paddle = class {
         end
     end,
 
+    -- On-screen rendering of the ball
     render = function(self)
         love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
     end
