@@ -22,6 +22,7 @@ function love.load()
     mainFont = love.graphics.newFont('retro-gaming.ttf', 8)
     scoreFont = love.graphics.newFont('retro-gaming.ttf', 30)
 
+    -- Set virtual window interface
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = false,
@@ -31,14 +32,17 @@ function love.load()
     P1score = 0
     P2score = 0
 
+    -- Set main instance game classes
     P1 = Paddle(10, 30, 5, 20)
     P2 = Paddle(VIRTUAL_WIDTH-10, VIRTUAL_HEIGHT-30, 5, 20)
     BallInstance = Ball(VIRTUAL_WIDTH/2 - 2, VIRTUAL_HEIGHT/2 - 2, 4, 4)
 
-    gameState = 'start'
+    -- Tracker if the game is running or not
+    gameStateRunning = false
 end
 
 function love.update(dt)
+    -- First paddle control keys
     if love.keyboard.isDown('w') then
         P1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('s') then
@@ -47,6 +51,7 @@ function love.update(dt)
         P1.dy = 0
     end
 
+    -- Second paddle control keys
     if love.keyboard.isDown('up') then
         P2.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('down') then
@@ -55,7 +60,7 @@ function love.update(dt)
         P2.dy = 0
     end
 
-    if gameState == 'play' then
+    if gameStateRunning then
         BallInstance:update(dt)
     end
     P1:update(dt)
@@ -89,13 +94,13 @@ end
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
+
+    -- Set/reset game
     elseif key == 'enter' or key == 'return' then
-        if gameState == 'start' then
-            gameState = 'play'
-        else 
-            gameState = 'start'
+        if gameStateRunning then
             BallInstance:reset()
         end
+        gameStateRunning = not gameStateRunning
     end
 end
 
