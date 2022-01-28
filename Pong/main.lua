@@ -14,6 +14,7 @@ PADDLE_SPEED = 200
 function love.load()
     -- Set retro filter (not smooth)
     love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.window.setTitle('Pong Remake (with Lua)')
     
     -- RNG system
     math.randomseed(os.time())
@@ -42,6 +43,40 @@ function love.load()
 end
 
 function love.update(dt)
+    if gameStateRunning then
+        -- Paddle-ball collision proccessing
+        if BallInstance:collides(P1) then
+            BallInstance.dx = -BallInstance.dx * 1.05
+            BallInstance.x = P1.x + 5
+
+            if BallInstance.dy < 0 then
+                BallInstance.dy = -math.random(10, 150)
+            else
+                BallInstance.dy = math.random(10, 150)
+            end
+        end
+        if BallInstance:collides(P2) then
+            BallInstance.dx = -BallInstance.dx * 1.05
+            BallInstance.x = P2.x - 4
+
+            if BallInstance.dy < 0 then
+                BallInstance.dy = -math.random(10, 150)
+            else
+                BallInstance.dy = math.random(10, 150)
+            end
+        end
+
+        -- Ball-borders collision proccessing
+        if BallInstance.y <= 0 then
+            BallInstance.y = 0
+            BallInstance.dy = -BallInstance.dy
+        end
+        if BallInstance.y >= VIRTUAL_HEIGHT-4 then
+            BallInstance.y = VIRTUAL_HEIGHT-4
+            BallInstance.dy = -BallInstance.dy
+        end
+    end
+
     -- First paddle control keys
     if love.keyboard.isDown('w') then
         P1.dy = -PADDLE_SPEED
@@ -87,6 +122,7 @@ function love.draw()
     P2:render()
     -- Draw centered ball
     BallInstance:render()
+    displayFPS()
 
     push:apply('end')
 end
@@ -104,3 +140,8 @@ function love.keypressed(key)
     end
 end
 
+function displayFPS()
+    love.graphics.setFont(mainFont)
+    love.graphics.setColor(0, 255, 0, 255)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+end
