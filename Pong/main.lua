@@ -13,15 +13,15 @@ PADDLE_SPEED = 200
 
 function love.load()
     -- Set retro filter (not smooth)
-    love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.graphics.setDefaultFilter("nearest", "nearest")
     love.window.setTitle('Pong Remake (with Lua)')
     
     -- RNG system
     math.randomseed(os.time())
 
     -- Set retro font
-    mainFont = love.graphics.newFont('retro-gaming.ttf', 8)
-    scoreFont = love.graphics.newFont('retro-gaming.ttf', 32)
+    mainFont = love.graphics.newFont('retro-gaming.ttf', 12)
+    scoreFont = love.graphics.newFont('retro-gaming.ttf', 36)
 
     -- Set virtual window interface
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -133,7 +133,7 @@ function love.draw()
     push:apply('start')
 
     -- Define background color (RGB = [40, 45, 52])
-    --love.graphics.clear(30, 30, 30, 255)
+    love.graphics.setBackgroundColor(30, 30, 30, 255)
     love.graphics.setFont(mainFont)
     love.graphics.printf('Pong Remake (w/ Lua)', 0, 20, VIRTUAL_WIDTH, 'center')
 
