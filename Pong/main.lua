@@ -133,14 +133,18 @@ function love.draw()
     push:apply('start')
 
     -- Define background color (RGB = [40, 45, 52])
-    love.graphics.setBackgroundColor(30, 30, 30, 255)
+    love.graphics.setBackgroundColor(40/255, 45/255, 52/255, 1)
+    love.graphics.clear(love.graphics.getBackgroundColor())
     love.graphics.setFont(mainFont)
-    love.graphics.printf('Pong Remake (w/ Lua)', 0, 20, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('Pong Remake (w/ Lua)', -20, 10, VIRTUAL_WIDTH, 'right')
 
     -- Draw scoreboard
     love.graphics.setFont(scoreFont)
     love.graphics.print(tostring(P1score), VIRTUAL_WIDTH/2 - 50, VIRTUAL_HEIGHT/3)
-    love.graphics.print(tostring(P2score), VIRTUAL_WIDTH/2 + 30, VIRTUAL_HEIGHT/3)
+    love.graphics.print(tostring(P2score), VIRTUAL_WIDTH/2 + 20, VIRTUAL_HEIGHT/3)
+
+    love.graphics.line(VIRTUAL_WIDTH/2, 0, VIRTUAL_WIDTH/2, VIRTUAL_HEIGHT)
+    love.graphics.setLineStyle('smooth')
 
     -- Draw first paddle
     P1:render()
