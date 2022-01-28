@@ -21,7 +21,7 @@ function love.load()
 
     -- Set retro font
     mainFont = love.graphics.newFont('retro-gaming.ttf', 8)
-    scoreFont = love.graphics.newFont('retro-gaming.ttf', 30)
+    scoreFont = love.graphics.newFont('retro-gaming.ttf', 32)
 
     -- Set virtual window interface
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -29,6 +29,12 @@ function love.load()
         resizable = false,
         vsync = true
     })
+
+    SFX = {
+        ['hit'] = love.audio.newSource('sfx/hit.wav', 'static'),
+        ['wall_hit'] = love.audio.newSource('sfx/wall_hit.wav', 'static'),
+        ['score'] = love.audio.newSource('sfx/score.wav', 'static')
+    }
 
     P1score = 0
     P2score = 0
@@ -38,7 +44,7 @@ function love.load()
     P2 = Paddle(VIRTUAL_WIDTH-10, VIRTUAL_HEIGHT-30, 5, 20)
     BallInstance = Ball(VIRTUAL_WIDTH/2 - 2, VIRTUAL_HEIGHT/2 - 2, 4, 4)
 
-    -- Tracker if the game is running or not
+    -- Tracker of the current game state
     gameStateRunning = false
 end
 
@@ -54,6 +60,8 @@ function love.update(dt)
             else
                 BallInstance.dy = math.random(10, 150)
             end
+
+            SFX['hit']:play()
         end
         if BallInstance:collides(P2) then
             BallInstance.dx = -BallInstance.dx * 1.05
@@ -64,17 +72,35 @@ function love.update(dt)
             else
                 BallInstance.dy = math.random(10, 150)
             end
+
+            SFX['hit']:play()
         end
 
         -- Ball-borders collision proccessing
         if BallInstance.y <= 0 then
             BallInstance.y = 0
             BallInstance.dy = -BallInstance.dy
+            SFX['wall_hit']:play()
         end
         if BallInstance.y >= VIRTUAL_HEIGHT-4 then
             BallInstance.y = VIRTUAL_HEIGHT-4
             BallInstance.dy = -BallInstance.dy
+            SFX['wall_hit']:play()
         end
+    end
+
+    -- Score system proccessing
+    if BallInstance.x < 0 then
+        P2score = P2score+1
+        BallInstance:reset()
+        gameStateRunning = not gameStateRunning
+        SFX['score']:play()
+    end
+    if BallInstance.x > VIRTUAL_WIDTH then
+        P1score = P1score+1
+        BallInstance:reset()
+        gameStateRunning = not gameStateRunning
+        SFX['score']:play()
     end
 
     -- First paddle control keys
